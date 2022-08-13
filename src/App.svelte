@@ -1,19 +1,19 @@
 <script>
   export let listQuantity = [
-    {
-      id: 0,
-      purchased: false,
-      quantity: 2,
-      name: "Milho de Pipoca",
-      value: 2.70
-    },
-    {
-      id: 1,
-      purchased: false,
-      quantity: 1,
-      name: "Óleo de Soja",
-      value: 5.90
-    }
+    // {
+    //   id: 0,
+    //   purchased: false,
+    //   quantity: 2,
+    //   name: "Milho de Pipoca",
+    //   value: 2.70
+    // },
+    // {
+    //   id: 1,
+    //   purchased: false,
+    //   quantity: 1,
+    //   name: "Óleo de Soja",
+    //   value: 5.90
+    // }
   ];
 
   let tabs = [
