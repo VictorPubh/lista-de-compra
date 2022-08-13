@@ -48,3 +48,8 @@ th > span {
   position: fixed;
   bottom: 0;
 }
+
+.tabs li.is-active a {
+  color: #3e8ed0 !important;
+  border-bottom-color: #3e8ed0 !important;
+}
