@@ -157,7 +157,7 @@
         </div>
       {/if}
 
-      <div class="mb-6" />
+      <div class="m-5 pt-2" />
     {:else}
       <h1 class="has-text-centered mt-3"> Nenhum produto foi adicionado.</h1>
       {#if hasHelp}
