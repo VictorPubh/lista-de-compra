@@ -112,7 +112,7 @@
   function setPurchased(id, bool) {
     listQuantity[id].purchased = bool;
     listQuantity = listQuantity;
-    
+
     updateStore();
   }
 </script>
@@ -151,12 +151,13 @@
       </div>
 
       {#if getTotalSelected() != "R$ 0,00" && !tabs[2].active}
-
-      <div class="total-selected">
-        <span class="has-text-grey is-size-6">Total:</span>
-        <span>{getTotalSelected()}</span>
-      </div>
+        <div class="total-selected">
+          <span class="has-text-grey is-size-6">Total:</span>
+          <span>{getTotalSelected()}</span>
+        </div>
       {/if}
+
+      <div class="mgt-medium" />
     {:else}
       <h1 class="has-text-centered mt-3"> Nenhum produto foi adicionado.</h1>
       {#if hasHelp}
