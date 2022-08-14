@@ -1,4 +1,6 @@
 <script>
+  import { onMount } from 'svelte';
+
   export let listQuantity = [
     // {
     //   id: 0,
@@ -15,6 +17,14 @@
     //   value: 5.90
     // }
   ];
+
+  onMount(async () => {
+    const localStorageList = localStorage.getItem('list');
+
+    if (localStorageList && localStorageList != "") {
+      listQuantity = JSON.parse(localStorageList);
+    }
+  });
 
   let tabs = [
     {
@@ -46,6 +56,10 @@
     tabs = tabs;
   };
 
+  function updateStore() {
+    localStorage.setItem("list", JSON.stringify(listQuantity));
+  }
+
   $: filterData = function(list) {
     const activated = tabs.find(tab => tab.active);
 
@@ -55,6 +69,8 @@
   function removeProductZero() {
     let newListing = listQuantity.filter(item => item.quantity > 0);
     listQuantity = newListing;
+
+    updateStore();
   }
 
   let currentQuantity;
@@ -73,6 +89,8 @@
     listQuantity = listQuantity;
     currentQuantity = "";
     currentProduct = "";
+
+    updateStore();
   };
 
   $: toMoney = function (i) {
@@ -94,6 +112,8 @@
   function setPurchased(id, bool) {
     listQuantity[id].purchased = bool;
     listQuantity = listQuantity;
+    
+    updateStore();
   }
 </script>
 
@@ -124,7 +144,7 @@
             <span class={`notification ${item.purchased ? "is-info" : "is-grey"} mb-0`}>
               <input class="input input-quantity is-small" type="number" placeholder="1" bind:value={item.quantity} on:change={removeProductZero}>
               <span on:click={() => setPurchased(item.id, (!item.purchased))}>{item.name}</span>
-              <input class="input input-value is-small" type="number" placeholder="R$ 0,00" bind:value={item.value}>
+              <input class="input input-value is-small" type="number" placeholder="R$ 0,00" bind:value={item.value} on:change={updateStore}>
               <span class="endmoney" on:click={() => setPurchased(item.id, (!item.purchased))}>{toMoney(item)}</span>
             </span>
         {/each}
