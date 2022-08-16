@@ -21,6 +21,7 @@
 
         inputListName = undefined;
         inputListLimit = undefined;
+        currentList = id;
 
         updateState(lists);
     };
