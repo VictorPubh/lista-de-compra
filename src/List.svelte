@@ -102,17 +102,19 @@
   }
 
   function addItem() {
+    const hasValue = currentValue !== undefined;
+
     const id = listData.length;
     const quantity = currentQuantity === undefined ? 1 : currentQuantity;
     const name = currentProduct === undefined ? `Produto #${id + 1}` : currentProduct;
-    const value = currentValue === undefined ? 0 : currentValue;
+    const value = hasValue ? currentValue : 0;
 
     listData.push({
       id,
       name,
       quantity,
       value,
-      purchased: true
+      purchased: hasValue
     });
 
     listData = listData;
@@ -180,25 +182,27 @@
       {#if !tabs[3].active}
         <ul class="gridListItems" use:autoAnimate>
           {#each filterData(listData) as item, i}
-              <li class={`notification ${item.purchased ? "is-info" : "is-grey"} mb-0`}>
+              <li class={`notification list-item ${item.purchased ? "is-info" : "is-grey"} mb-0`}>
                 <input
                   class="input input-quantity is-small"
                   type="number" placeholder="1"
                   bind:value={item.quantity}
                   on:change={removeProductZero}>
-                <span on:click={() => setPurchased(item.id, (!item.purchased))}>{item.name}</span>
+                <p class="text-ellipsis" on:click={() => setPurchased(item.id, (!item.purchased))}>{item.name}</p>
 
-                <input
-                  class="input input-value is-small"
-                  type="number"
-                  placeholder="0.00"
-                  bind:value={item.value}
-                  on:change={updateStore}
-                  on:focus={() => {
-                    if (item.value == 0) item.value = "";
-                  }}>
-                <span class="endmoney" on:click={() => setPurchased(item.id, (!item.purchased))}>{toMoney(item)}</span>
-                </li>
+                <span class="money-grid">
+                  <input
+                    class="input input-value is-small"
+                    type="number"
+                    placeholder="0.00"
+                    bind:value={item.value}
+                    on:change={updateStore}
+                    on:focus={() => {
+                      if (item.value == 0) item.value = "";
+                    }}>
+                  <span class="endmoney text-ellipsis" on:click={() => setPurchased(item.id, (!item.purchased))}>{toMoney(item)}</span>
+                </span>
+              </li>
           {/each}
         </ul>
       {/if}
@@ -316,6 +320,53 @@
 
   .text-title {
     width: 45vw;
+    text-overflow: ellipsis;
+    white-space: nowrap; 
+    overflow: hidden;
+  }
+
+  .list-item {
+    padding: .65rem;
+    display: grid;
+    grid-template-columns: 4rem auto auto;
+    height: 4rem;
+    gap: .5rem;
+    font-weight: bold;
+    justify-content: space-between;
+    align-items: center;
+    border-radius: .5rem;
+  }
+
+  li.list-item input {
+    color: #4a4a4a;
+  }
+
+  li.is-info input {
+    color: white;
+  }
+
+  .money-grid {
+    display: grid;
+    justify-content: center;
+    align-items: center;
+    grid-template-columns: 4rem 4.75rem;
+    gap: .5rem;
+    text-align: center;
+  }
+
+  .input-quantity, .input-value {
+    width: 4rem;
+    font-size: .75rem;
+    font-weight: 600;
+    background-color: transparent;
+    border: 0;
+    color: white;
+    border-bottom: .15rem dashed white;
+    text-align: center;
+    outline: none;
+  }
+
+  .text-ellipsis {
     text-overflow: ellipsis;
     white-space: nowrap; 
     overflow: hidden;

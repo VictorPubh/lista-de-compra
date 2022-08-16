@@ -8,27 +8,11 @@ th > span {
   margin: 10rem 0 !important;
 }
 
-.input-quantity, .input-value {
-  width: 3.25rem;
-  text-align: center;
-}
-
 .gridListItems {
   display: grid;
   gap: .5rem;
   overflow: hidden;
   margin: .5rem;
-}
-
-.notification {
-  padding: .65rem;
-  display: grid;
-  grid-template-columns: 15% 40% 15% 20%;
-  gap: .5rem;
-  font-weight: bold;
-  justify-content: center;
-  align-items: center;
-  border-radius: .5rem;
 }
 
 .total-selected {
@@ -42,4 +26,11 @@ th > span {
 .tabs li.is-active a {
   color: #3e8ed0 !important;
   border-bottom-color: #3e8ed0 !important;
+}
+
+input[type=number]::-webkit-inner-spin-button, 
+input[type=number]::-webkit-outer-spin-button { 
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none; 
 }

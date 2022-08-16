@@ -74,7 +74,7 @@
 </script>
 
 {#if currentList === undefined}
-    <div class="screen has-background-info" in:fly={{ x: -500, duration: 400 }} out:fly={{ x: -500, duration: 400 }}>
+    <div class="screen has-background-info" in:fly={{ x: -500, duration: 340 }} out:fly={{ x: -500, duration: 340 }}>
         {#if lists.length > 0}
             <ul class="item-lists" use:autoAnimate>
                 {#each lists as list, i}
@@ -82,7 +82,7 @@
                         <span class="trash" on:click={() => removeList(i)}>
                             <i class="gg-trash-empty"></i>
                         </span>
-                        <span on:click={() => currentList = i}>{list.name}</span>
+                        <p class="item-title" on:click={() => currentList = i}>{list.name}</p>
                         <span>
                             <span class={`${hasPickall(getItems(i), getPicks(i)) ? "is-pickall" : "not-pickall"}`} on:click={() => currentList = i}>{getItems(i)}/{getPicks(i)}</span>
                         </span>
@@ -144,6 +144,7 @@
     .list-item {
         display: grid;
         grid-template-columns: min-content 1fr min-content min-content;
+        align-items: center;
         padding: .75rem;
         width: 100%;
         border-radius: .5rem;
@@ -192,5 +193,11 @@
 
     ul.item-lists li {
         height: 3.75rem;
+    }
+
+    ul.item-lists .item-title {
+        text-overflow: ellipsis;
+        white-space: nowrap; 
+        overflow: hidden;
     }
 </style>
