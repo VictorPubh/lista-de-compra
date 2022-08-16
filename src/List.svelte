@@ -203,7 +203,7 @@
       {/if}
 
       {#if hasLimit}
-        <div class="total-selected">
+        <div class={`total-selected ${tabs[3].active && "pt-3"}`}>
           <span class="has-text-grey is-size-6">Limite:</span>
           <span>{`R$ ${listLimit.toLocaleString('pt-br', { minimumFractionDigits: 2 })}`}</span>
         </div>
@@ -281,9 +281,9 @@
     {/if}
     
     <div class="add-new">
-      <input class="input" type="number" placeholder="1" bind:value={currentQuantity} />
+      <input class="input" type="number" pattern="[0-9]*" inputmode="numeric" placeholder="1" bind:value={currentQuantity} />
       <input class="input" type="text" placeholder="Leite Condensado" bind:value={currentProduct} />
-      <input class="input" type="number" placeholder="1.99" bind:value={currentValue} />
+      <input class="input" type="number" pattern="[0-9]*" inputmode="numeric" placeholder="1.99" bind:value={currentValue} />
       <button class="button is-info" on:click={addItem}>
         <i class="gg-play-list-add"></i>
       </button>
