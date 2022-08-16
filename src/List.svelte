@@ -275,7 +275,7 @@
           </div>
         </article>
       {/if}
-      {#if hasHelp.instructions == false && hasHelp.tips == false}
+      {#if hasHelp.instructions == false && hasHelp.tips == false && !tabs[3].active}
         <h1 class="has-text-centered my-6"> Nenhum produto foi adicionado.</h1>
       {/if}
     {/if}

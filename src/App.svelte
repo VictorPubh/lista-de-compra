@@ -19,6 +19,9 @@
             limit
         })
 
+        inputListName = undefined;
+        inputListLimit = undefined;
+
         updateState(lists);
     };
 
