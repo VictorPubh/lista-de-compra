@@ -202,29 +202,31 @@
         </div>
       {/if}
 
-      {#if hasLimit}
-        <div class={`total-selected ${tabs[3].active && "pt-3"}`}>
-          <span class="has-text-grey is-size-6">Limite:</span>
-          <span>{`R$ ${listLimit.toLocaleString('pt-br', { minimumFractionDigits: 2 })}`}</span>
-        </div>
-      {/if}
-
-      {#if getTotalSelected() != "R$ 0,00" && !tabs[2].active}
-        <div class="total-selected">
-          <span class="has-text-grey is-size-6">Total:</span>
-          <span>
-            {hasLimit ? "-" : ""}
-            {getTotalSelected()}
-          </span>
-        </div>
-      {/if}
-
-      {#if hasLimit}
-        <div class="total-selected">
-          <span />
-          <span class={`is-size-5 ${(getAvailableValue(false) < 0) && "has-text-danger"}`}>{getAvailableValue()}</span>
-        </div>
-      {/if}
+      <div class={`${tabs[3].active && "pt-3"}`}>
+        {#if hasLimit}
+          <div class={`total-selected ${tabs[3].active && "pt-3"}`}>
+            <span class="has-text-grey is-size-6">Limite:</span>
+            <span>{`R$ ${listLimit.toLocaleString('pt-br', { minimumFractionDigits: 2 })}`}</span>
+          </div>
+        {/if}
+  
+        {#if getTotalSelected() != "R$ 0,00" && !tabs[2].active}
+          <div class="total-selected">
+            <span class="has-text-grey is-size-6">Total:</span>
+            <span>
+              {hasLimit ? "-" : ""}
+              {getTotalSelected()}
+            </span>
+          </div>
+        {/if}
+  
+        {#if hasLimit}
+          <div class="total-selected">
+            <span />
+            <span class={`is-size-5 ${(getAvailableValue(false) < 0) && "has-text-danger"}`}>{getAvailableValue()}</span>
+          </div>
+        {/if}
+      </div>
       <div class="m-5 pt-2" />
     {:else}
       {#if hasHelp.instructions}
