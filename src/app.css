@@ -1,3 +1,5 @@
+@import './gg.css';
+
 th {
   text-align: center !important;
 }
@@ -37,19 +39,8 @@ th > span {
   margin: 0 1rem;
 }
 
-.addNew {
-  display: grid;
-  grid-template-columns: 3rem auto auto;
-  gap: .5rem;
-
-  width: 100vw;
-  padding: .5rem;
-  
-  position: fixed;
-  bottom: 0;
-}
-
 .tabs li.is-active a {
   color: #3e8ed0 !important;
   border-bottom-color: #3e8ed0 !important;
 }
+

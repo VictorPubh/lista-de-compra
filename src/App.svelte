@@ -1,185 +1,177 @@
 <script>
-  import { onMount } from 'svelte';
+    import List from "./List.svelte";
 
-  export let listQuantity = [
-    // {
-    //   id: 0,
-    //   purchased: false,
-    //   quantity: 2,
-    //   name: "Milho de Pipoca",
-    //   value: 2.70
-    // },
-    // {
-    //   id: 1,
-    //   purchased: false,
-    //   quantity: 1,
-    //   name: "Óleo de Soja",
-    //   value: 5.90
-    // }
-  ];
+    const storageLists = localStorage.getItem("lists");
+    export let lists = storageLists != undefined ? JSON.parse(storageLists) : [];
 
-  onMount(async () => {
-    const localStorageList = localStorage.getItem('list');
+    let inputListName, inputListLimit;
+    let currentList;
 
-    if (localStorageList && localStorageList != "") {
-      listQuantity = JSON.parse(localStorageList);
+    const addNewList = () => {
+        const id = lists.length;
+        const name = inputListName == undefined ? `Lista #${id + 1}` : inputListName;
+        const limit = inputListLimit == undefined ? 0 : inputListLimit;
+
+        lists.push({
+            id,
+            name,
+            content: [],
+            limit
+        })
+
+        updateState(lists);
+    };
+
+    const removeList = (index) => {
+        const filterLists = lists.filter(list => list.id !== index);
+
+        for(let i = 0; i < filterLists.length; i++) {
+            filterLists[i].id = i;
+        }
+
+        updateState(filterLists);
+    };
+
+    const updateList = (index, list) => {
+        lists[index].content = list;
+        updateState(lists);
     }
-  });
 
-  let tabs = [
-    {
-      label: "Todos",
-      active: true,
-      fn: (list) => list
-    },
-    {
-      label: "Escolhidos",
-      active: false,
-      fn: (list) => list.filter(product => {
-        if (product.purchased === true) return true;
-      })
-    },
-    {
-      label: "Restantes",
-      active: false,
-      fn: (list) => list.filter(product => {
-        if (product.purchased === false) return true;
-      })
+    const updateState = (newState) => {
+        lists = newState;
+        localStorage.setItem("lists", JSON.stringify(newState));
     }
-  ];
 
-  function setTab(newTab) {
-    tabs.map(tab => {
-      tab.active = (tab.label === newTab);
-    });
+    const hasPickall = (a, b) => (a === b && a != 0);
 
-    tabs = tabs;
-  };
+    $: getTotalByIdx = (idx) => {
+        let total = 0;
 
-  function updateStore() {
-    localStorage.setItem("list", JSON.stringify(listQuantity));
-  }
+        lists[idx].content.forEach(list => {
+            total += list.value * list.quantity;
+        });
 
-  $: filterData = function(list) {
-    const activated = tabs.find(tab => tab.active);
+        return total;
+    }
 
-    return activated.fn(list);
-  }
+    $: getItems = (idx) => {
+        return lists[idx].content.length;
+    }
 
-  function removeProductZero() {
-    let newListing = listQuantity.filter(item => item.quantity > 0);
-    listQuantity = newListing;
-
-    updateStore();
-  }
-
-  let currentQuantity;
-  let currentProduct;
-  let hasHelp = true;
-
-  function addItem() {
-    listQuantity.push({
-      id: listQuantity.length,
-      purchased: false,
-      quantity: currentQuantity,
-      name: currentProduct,
-      value: 0
-    });
-
-    listQuantity = listQuantity;
-    currentQuantity = "";
-    currentProduct = "";
-
-    updateStore();
-  };
-
-  $: toMoney = function (i) {
-    return`R$${(i.value * i.quantity).toLocaleString('pt-br', { minimumFractionDigits: 2 })}`;
-  }
-
-  $: getTotalSelected = function () {
-    let amount = 0;
-
-    listQuantity.forEach(item => {
-      if(item.purchased) {
-        amount += item.value * item.quantity;
-      }
-    });
-
-    return `R$ ${amount.toLocaleString('pt-br', { minimumFractionDigits: 2 })}`;
-  }
-
-  function setPurchased(id, bool) {
-    listQuantity[id].purchased = bool;
-    listQuantity = listQuantity;
-
-    updateStore();
-  }
+    $: getPicks = (idx) => {
+        const picks = lists[idx].content.filter(list => list.purchased === true);
+        return picks.length;
+    }
 </script>
 
-<container class="screen">
-  <h1 class="is-size-4 py-4 has-text-centered">
-    Lista de Compras
-    {#if filterData(listQuantity).length > 0}
-      <span class="tag is-info is-medium">{filterData(listQuantity).length}x Itens</span>
-    {/if}
-  </h1>
+{#if currentList === undefined}
+    <div class="screen has-background-info">
+        {#if lists.length > 0}
+            {#each lists as list, i}
+            <div class="list-item notification is-info is-light m-0">
+                <span class="trash" on:click={() => removeList(i)}>
+                    <i class="gg-trash-empty"></i>
+                </span>
+                <span on:click={() => currentList = i}>{list.name}</span>
+                <span>
+                    <span class={`${hasPickall(getItems(i), getPicks(i)) ? "is-pickall" : "not-pickall"}`} on:click={() => currentList = i}>{getItems(i)}/{getPicks(i)}</span>
+                </span>
 
-  <div class="tabs is-centered mb-1">
-    <ul>
-      {#each tabs as tab}
-        <li class={tab.active && "is-active"}>
-          <a href={`#${tab.label}`} on:click={() => setTab(tab.label)}>
-            <span>{tab.label}</span>
-          </a>
-        </li>
-      {/each}
-    </ul>
-  </div>
+                {#if list.limit > 0}
+                    <span class={`tag ${!hasPickall(getItems(i), getPicks(i)) ? "is-info" : "is-success is-light"}`}>
+                        {#if hasPickall(getItems(i), getPicks(i))}
+                            {`R$ ${(getTotalByIdx(i)).toLocaleString('pt-br', { minimumFractionDigits: 2 })}`}
+                        {:else}
+                            {`R$ ${(list.limit).toLocaleString('pt-br', { minimumFractionDigits: 2 })}`}
+                        {/if}
+                    </span>
+                {/if}
+            </div>
+            {/each}
+        {:else}
+            <div class="not-found">
+                <i class="gg-play-list-add has-text-white gg-plus"></i>
+                <h1 class="is-size-4 has-text-weight-bold has-text-white">Crie uma nova Lista!</h1>
+                <p class="is-size-5 has-text-white">Ooops... Nada foi encontrado.</p>
+            </div>
+        {/if}
 
-  <div class="table-container">
-    {#if filterData(listQuantity).length > 0}
-      <div class="gridListItems">
-        {#each filterData(listQuantity) as item, i}
-            <span class={`notification ${item.purchased ? "is-info" : "is-grey"} mb-0`}>
-              <input class="input input-quantity is-small" type="number" placeholder="1" bind:value={item.quantity} on:change={removeProductZero}>
-              <span on:click={() => setPurchased(item.id, (!item.purchased))}>{item.name}</span>
-              <input class="input input-value is-small" type="number" placeholder="R$ 0,00" bind:value={item.value} on:change={updateStore}>
-              <span class="endmoney" on:click={() => setPurchased(item.id, (!item.purchased))}>{toMoney(item)}</span>
-            </span>
-        {/each}
-      </div>
-
-      {#if getTotalSelected() != "R$ 0,00" && !tabs[2].active}
-        <div class="total-selected">
-          <span class="has-text-grey is-size-6">Total:</span>
-          <span>{getTotalSelected()}</span>
-        </div>
-      {/if}
-
-      <div class="m-5 pt-2" />
-    {:else}
-      <h1 class="has-text-centered mt-3"> Nenhum produto foi adicionado.</h1>
-      {#if hasHelp}
-        <article class="message is-info mx-2 my-4">
-          <div class="message-header">
-            <p>Como usar?</p>
-            <button class="delete" aria-label="delete" on:click={() => hasHelp = false}></button>
-          </div>
-          <div class="message-body">
-            Adicione os itens e as quantidades de itens na sua lista e depois popule-os com os valores da prateleiras enquanto você escolhe os itens no comércio, os itens selecionados (em azul) são somados no final da listagem.  
-            <br />
-            <br />
-            Para remover um item da sua lista, defina a quantidade dele como 0.
-          </div>
-        </article>
-      {/if}
-    {/if}
-    
-    <div class="addNew">
-      <input class="input" type="number" placeholder="1" bind:value={currentQuantity} />
-      <input class="input" type="text" placeholder="Leite Condensado" bind:value={currentProduct} />
-      <button class="button is-info" on:click={addItem}>Adicionar</button>
+        <div class="mt-4 mb-5" />
     </div>
-  </div>
-</container>
+
+    <div class="new-list">
+        <input class="input" type="text" placeholder="e.g, Compras de Janeiro" bind:value={inputListName} />
+        <input class="input" type="number" placeholder="300" bind:value={inputListLimit} />
+        <button class="button is-success is-light" on:click={addNewList}>
+            <i class="gg-play-list-add"></i>
+        </button>
+    </div>
+{:else}
+    <List
+        listName={lists[currentList].name}
+        listData={lists[currentList].content}
+        listLimit={lists[currentList].limit}
+        on:storage={(e) => updateList(currentList, e.detail.text)}
+        on:return={(e) => currentList = undefined}
+    />
+{/if}
+
+<style>
+    .screen {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        gap: .5rem;
+        
+        width: 100vw;
+        height: 100%;
+        min-height: 100vh;
+
+        padding: .75rem;
+    }
+    .list-item {
+        display: grid;
+        grid-template-columns: min-content 1fr min-content min-content;
+        padding: .75rem;
+        width: 100%;
+        border-radius: .5rem;
+    }
+
+    .list-item .trash {
+        padding: .5rem .75rem;
+    }
+    .new-list {
+        position: fixed;
+        bottom: 0;
+
+        display: grid;
+        grid-template-columns: auto 5rem min-content;
+        gap: .5rem;
+
+        width: 100vw;
+        padding: .5rem;
+    }
+
+    .is-pickall {
+        background-color: hsl(141, 50%, 48%);
+        padding: 0.25rem 0.5rem;
+        color: white;
+        border-radius: .25rem;
+    }
+
+    .not-pickall {
+        padding: 0.25rem 0.5rem;
+    }
+
+    .gg-plus {
+        transform: scale(4.5);
+        opacity: .75;
+        position: relative;
+        top: -3.5rem;
+    }
+
+    .not-found {
+        margin-top: 3.5rem;
+    }
+</style>
