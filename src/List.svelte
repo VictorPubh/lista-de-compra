@@ -174,7 +174,7 @@
     </ul>
   </div>
 
-  <div class={`table-container ${tabs[3].active && "pt-3"}`}>
+  <div class="table-container">
     {#if filterData(listData).length > 0}
       {#if !tabs[3].active}
         <div class="gridListItems">
