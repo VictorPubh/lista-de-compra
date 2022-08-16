@@ -283,9 +283,9 @@
     {/if}
     
     <div class="add-new">
-      <input class="input" type="number" pattern="[0-9]*" inputmode="decimal" placeholder="1" bind:value={currentQuantity} />
+      <input class="input" type="number" pattern="[0-9.,]*" inputmode="decimal" step="any" placeholder="1" bind:value={currentQuantity} />
       <input class="input" type="text" placeholder="Leite Condensado" bind:value={currentProduct} />
-      <input class="input" type="number" pattern="[0-9]*" inputmode="decimal" placeholder="1.99" bind:value={currentValue} />
+      <input class="input" type="number" pattern="[0-9.,]*" inputmode="decimal" step="any" placeholder="1.99" bind:value={currentValue} />
       <button class="button is-info" on:click={addItem}>
         <i class="gg-play-list-add"></i>
       </button>

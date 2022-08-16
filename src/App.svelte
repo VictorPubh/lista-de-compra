@@ -105,7 +105,7 @@
 
     <div class="new-list">
         <input class="input" type="text" placeholder="e.g, Compras de Janeiro" bind:value={inputListName} />
-        <input class="input" type="number" pattern="[0-9]*" inputmode="decimal" placeholder="300" bind:value={inputListLimit} />
+        <input class="input" type="number" pattern="[0-9.,]*" inputmode="decimal" step="any" placeholder="300" bind:value={inputListLimit} />
         <button class="button is-success is-light" on:click={addNewList}>
             <i class="gg-play-list-add"></i>
         </button>
