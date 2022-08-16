@@ -1,4 +1,6 @@
 <script>
+    import { fade, blur, fly, slide, scale } from "svelte/transition";
+    import autoAnimate from '@formkit/auto-animate';
     import List from "./List.svelte";
 
     const storageLists = localStorage.getItem("lists");
@@ -21,7 +23,10 @@
 
         inputListName = undefined;
         inputListLimit = undefined;
-        currentList = id;
+
+        setTimeout(() => {
+            currentList = id;
+        }, 600);
 
         updateState(lists);
     };
@@ -69,29 +74,31 @@
 </script>
 
 {#if currentList === undefined}
-    <div class="screen has-background-info">
+    <div class="screen has-background-info" in:fly={{ x: -500, duration: 400 }} out:fly={{ x: -500, duration: 400 }}>
         {#if lists.length > 0}
-            {#each lists as list, i}
-            <div class="list-item notification is-info is-light m-0">
-                <span class="trash" on:click={() => removeList(i)}>
-                    <i class="gg-trash-empty"></i>
-                </span>
-                <span on:click={() => currentList = i}>{list.name}</span>
-                <span>
-                    <span class={`${hasPickall(getItems(i), getPicks(i)) ? "is-pickall" : "not-pickall"}`} on:click={() => currentList = i}>{getItems(i)}/{getPicks(i)}</span>
-                </span>
-
-                {#if list.limit > 0}
-                    <span class={`tag ${!hasPickall(getItems(i), getPicks(i)) ? "is-info" : "is-success is-light"}`}>
-                        {#if hasPickall(getItems(i), getPicks(i))}
-                            {`R$ ${(getTotalByIdx(i)).toLocaleString('pt-br', { minimumFractionDigits: 2 })}`}
-                        {:else}
-                            {`R$ ${(list.limit).toLocaleString('pt-br', { minimumFractionDigits: 2 })}`}
+            <ul class="item-lists" use:autoAnimate>
+                {#each lists as list, i}
+                    <li class="list-item notification is-info is-light m-0">
+                        <span class="trash" on:click={() => removeList(i)}>
+                            <i class="gg-trash-empty"></i>
+                        </span>
+                        <span on:click={() => currentList = i}>{list.name}</span>
+                        <span>
+                            <span class={`${hasPickall(getItems(i), getPicks(i)) ? "is-pickall" : "not-pickall"}`} on:click={() => currentList = i}>{getItems(i)}/{getPicks(i)}</span>
+                        </span>
+        
+                        {#if list.limit > 0}
+                            <span class={`tag ${!hasPickall(getItems(i), getPicks(i)) ? "is-info" : "is-success is-light"}`}>
+                                {#if hasPickall(getItems(i), getPicks(i))}
+                                    {`R$ ${(getTotalByIdx(i)).toLocaleString('pt-br', { minimumFractionDigits: 2 })}`}
+                                {:else}
+                                    {`R$ ${(list.limit).toLocaleString('pt-br', { minimumFractionDigits: 2 })}`}
+                                {/if}
+                            </span>
                         {/if}
-                    </span>
-                {/if}
-            </div>
-            {/each}
+                    </li>
+                {/each}
+            </ul>
         {:else}
             <div class="not-found">
                 <i class="gg-play-list-add has-text-white gg-plus"></i>
@@ -174,8 +181,16 @@
         position: relative;
         top: -3.5rem;
     }
-
     .not-found {
         margin-top: 3.5rem;
+    }
+    ul.item-lists {
+        width: 100%;
+        display: grid;
+        gap: .75rem;
+    }
+
+    ul.item-lists li {
+        height: 3.75rem;
     }
 </style>

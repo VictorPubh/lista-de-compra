@@ -1,4 +1,5 @@
 <script>
+  import autoAnimate from '@formkit/auto-animate';
 	import { createEventDispatcher } from 'svelte';
   import { onMount } from 'svelte';
 
@@ -177,9 +178,9 @@
   <div class="table-container">
     {#if filterData(listData).length > 0}
       {#if !tabs[3].active}
-        <div class="gridListItems">
+        <ul class="gridListItems" use:autoAnimate>
           {#each filterData(listData) as item, i}
-              <span class={`notification ${item.purchased ? "is-info" : "is-grey"} mb-0`}>
+              <li class={`notification ${item.purchased ? "is-info" : "is-grey"} mb-0`}>
                 <input
                   class="input input-quantity is-small"
                   type="number" placeholder="1"
@@ -197,9 +198,9 @@
                     if (item.value == 0) item.value = "";
                   }}>
                 <span class="endmoney" on:click={() => setPurchased(item.id, (!item.purchased))}>{toMoney(item)}</span>
-              </span>
+                </li>
           {/each}
-        </div>
+        </ul>
       {/if}
 
       <div class={`${(tabs[3].active && !hasLimit) && "pt-3"}`}>
