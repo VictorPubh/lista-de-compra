@@ -131,9 +131,9 @@
   };
 
   function setPurchased(id, bool) {
-    $lists[$listingIndex].content[id]["purchased"] = bool;
+    listData[id].purchased = bool;
 
-    updateStore($lists);
+    updateStore(listData);
   }
 </script>
 
