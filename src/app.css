@@ -1,13 +1,5 @@
 @import './gg.css';
 
-th {
-  text-align: center !important;
-}
-
-th > span {
-  margin: 10rem 0 !important;
-}
-
 .gridListItems {
   display: grid;
   gap: .5rem;
