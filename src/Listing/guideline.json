@@ -1,0 +1,41 @@
+[
+  {
+    "selector": ".add-new #quantityInput",
+    "position": "top-start",
+    "text": "Insira a Quantidade de Itens, por padrão: 1;\n\nAceita valor com números inteiros e decimais/flutuantes.",
+    "nextText": "Próximo",
+    "width": "260px"
+  },
+  {
+    "selector": ".add-new #productInput",
+    "position": "top-start",
+    "text": "Insira o Nome do Item, por padrão: Produto #123.",
+    "nextText": "Próximo",
+    "width": "260px"
+  },
+  {
+    "selector": ".add-new #valueInput",
+    "position": "top-end",
+    "text": "Insira o Valor do Item, por padrão: 0;\n\nAceita valor com números inteiros e decimais/flutuantes.",
+    "nextText": "Próximo",
+    "width": "280px"
+  },
+  {
+    "selector": ".add-new .button",
+    "position": "top-end",
+    "text": "Clique para inserir o Item na Listagem.",
+    "nextText": "Próximo"
+  },
+  {
+    "selector": "#buttonTextMode",
+    "position": "bottom-end",
+    "text": "Clique para ir até o Modo Texto.",
+    "nextText": "Próximo"
+  },
+  {
+    "selector": "#labelAmount",
+    "position": "bottom",
+    "text": "Aqui você verá o Valor Total ou o Valor Restante (caso um limite seja definido).",
+    "width": "260px"
+  }
+]

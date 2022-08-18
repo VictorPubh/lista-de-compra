@@ -157,7 +157,7 @@
             opts={{
                 style: {
                     width: "92vw",
-                    height: "65vh"
+                    height: "70vh"
                 } 
             }}
             on:onConfirm={() => textModeTour.set(false)}

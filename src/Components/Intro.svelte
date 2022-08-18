@@ -3,6 +3,8 @@
     const dispatch = createEventDispatcher();
 
     export let title = "Introdução";
+    export let nextText = "Próximo";
+    export let prevText = "Retroceder";
     export let confirmText = "Confirmar";
 
     export let showSteps = false;
@@ -18,6 +20,8 @@
       dangerouslyUseHTMLString: useHTML,
       showSteps,
       canClose,
+      nextText,
+      prevText,
       confirmText,
       ...opts,
       onConfirm: () => dispatch("onConfirm")

@@ -4,6 +4,7 @@
 
     export let canClose = false;
     export let showSteps = false;
+    export let useHTML = false;
 
     export let confirmText = "Confirmar";
     export let prevText = "Retroceder";
@@ -18,6 +19,7 @@
       prevText,
       confirmText,
       ...opts,
+      dangerouslyUseHTMLString: useHTML,
       onConfirm: () => dispatch("onConfirm"),
     });
   </script>
