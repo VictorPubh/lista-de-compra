@@ -1,7 +1,18 @@
 <script>
   import autoAnimate from "@formkit/auto-animate";
   import TextMode from "../TextMode/index.svelte";
-  import { lists, listingIndex, hasHelp, textMode } from "../Store/globals";
+
+  import {
+    lists,
+    listingIndex,
+    textMode,
+    listingTour,
+    listingItemTour,
+  } from "../Store/globals";
+
+  let firstItemAdd = false;
+
+  import Guideline from "../Components/Guideline.svelte";
 
   export let listName = "Lista de Compra";
   export let listData = [];
@@ -13,11 +24,6 @@
   let hasLimit = false;
 
   $: if (listLimit > 0) hasLimit = true;
-
-  const closeHelp = (key) => {
-    $hasHelp[key] = false;
-    hasHelp.set($hasHelp);
-  };
 
   let tabs = [
     {
@@ -98,6 +104,8 @@
     currentProduct = undefined;
     currentValue = undefined;
 
+    if (id == 0) firstItemAdd = true;
+
     updateStore(listData);
   }
 
@@ -137,25 +145,34 @@
   }
 </script>
 
-<container class="screen">
+<main class="screen">
   <div class="header py-4">
     <div class="button-return">
-        <i class="gg-arrow-left" on:click={() => {
-            textMode.set(false);
-            listingIndex.set(undefined)
-        }}/>
+      <i
+        class="gg-arrow-left"
+        on:click={() => {
+          listingIndex.set(undefined);
+          textMode.set(false);
+        }}
+      />
     </div>
     <span>
       {#if filterData(listData).length > 0}
         <span class="tag is-info is-medium">{filterData(listData).length}x</span
         >
       {/if}
-      <span class="tag is-medium">
+      <span id="labelAmount" class="tag is-medium">
         {hasLimit ? getAvailableValue() : getTotalSelected()}
       </span>
     </span>
-    <div on:click={() => textMode.set(!$textMode)} class={`button-rounded ${$textMode === true ? "has-background-info" : "color-gray"}`}>
-        <i class="gg-format-text" />
+    <div
+      id="buttonTextMode"
+      on:click={() => textMode.set(!$textMode)}
+      class={`button-rounded ${
+        $textMode === true ? "has-background-info" : "color-gray"
+      }`}
+    >
+      <i class="gg-format-text" />
     </div>
   </div>
 
@@ -261,77 +278,13 @@
           {/if}
         </div>
         <div class="m-5 pt-2" />
-      {:else}
-        {#if $hasHelp.instructions}
-          <article class="message is-info mx-2 my-4">
-            <div class="message-header">
-              <p>Instruções</p>
-              <button
-                class="delete"
-                aria-label="delete"
-                on:click={() => closeHelp("instructions")}
-              />
-            </div>
-            <div class="message-body">
-              1. Se ao adicionar não houver uma quantidade inserida, a
-              quantidade será preenchida como: 1.
-              <br />
-              <br />
-              2. Se ao adicionar não houver um nome inserido, o nome será preenchido
-              como: "Produto #123".
-              <br />
-              <br />
-              3. Se ao adicionar não houver um valor inserido, o valor será preenchido
-              como: 0.00.
-            </div>
-          </article>
-        {/if}
-
-        {#if $hasHelp.tips}
-          <article class="message mx-2 my-4">
-            <div class="message-header">
-              <p>Dicas</p>
-              <button
-                class="delete"
-                aria-label="delete"
-                on:click={() => closeHelp("tips")}
-              />
-            </div>
-            <div class="message-body">
-              1. Para remover um item da sua lista, defina a quantidade dele
-              como 0.
-              <br />
-              <br />
-              2.1 Você pode usar ".6" para 600g e/ou "22.9" para R$22,90...
-              <br />
-              <br />
-              2.2 Use ponto ou vírgula.
-              <br />
-              <br />
-              <button
-                class="button is-small is-dark"
-                on:click={() => {
-                  listData.push({
-                    id: 0,
-                    name: "Presunto",
-                    quantity: ".6",
-                    value: "22.9",
-                    purchased: false,
-                  });
-
-                  listData = listData;
-                }}>Clique para um Exemplo</button
-              >
-            </div>
-          </article>
-        {/if}
-        {#if $hasHelp.instructions == false && $hasHelp.tips == false && !tabs[3].active}
-          <h1 class="has-text-centered my-6">Nenhum produto foi adicionado.</h1>
-        {/if}
+      {:else if !tabs[3].active}
+        <h1 class="has-text-centered my-6">Nenhum Item.</h1>
       {/if}
 
       <div class="add-new">
         <input
+          id="quantityInput"
           class="input"
           type="number"
           pattern="[0-9.,]*"
@@ -341,12 +294,14 @@
           bind:value={currentQuantity}
         />
         <input
+          id="productInput"
           class="input"
           type="text"
           placeholder="Leite Condensado"
           bind:value={currentProduct}
         />
         <input
+          id="valueInput"
           class="input"
           type="number"
           pattern="[0-9.,]*"
@@ -360,16 +315,77 @@
         </button>
       </div>
     </div>
-    {:else}
-        <TextMode items={$lists[$listingIndex]} />
-    {/if}
-</container>
+  {:else}
+    <TextMode items={$lists[$listingIndex]} />
+  {/if}
+</main>
+
+{#if firstItemAdd == true && ($listingItemTour == true || $listingItemTour == "true")}
+  <Guideline
+    list={[
+      {
+        selector: ".input-quantity",
+        position: "bottom-start",
+        text: "Para remover um item, defina sua quantidade como 0.",
+        width: "260px",
+      },
+    ]}
+    on:onConfirm={() => listingItemTour.set(false)}
+  />
+{/if}
+
+{#if $listingTour == true || $listingTour == "true"}
+  <Guideline
+    list={[
+      {
+        selector: ".add-new #quantityInput",
+        position: "top-start",
+        text: "Insira a Quantidade de Itens, por padrão: 1;\n\nAceita valor com números inteiros e decimais/flutuantes.",
+        nextText: "Próximo",
+        width: "260px",
+      },
+      {
+        selector: ".add-new #productInput",
+        position: "top-start",
+        text: "Insira o Nome do Item, por padrão: Produto #123.",
+        nextText: "Próximo",
+        width: "260px",
+      },
+      {
+        selector: ".add-new #valueInput",
+        position: "top-end",
+        text: "Insira o Valor do Item, por padrão: 0;\n\nAceita valor com números inteiros e decimais/flutuantes.",
+        nextText: "Próximo",
+        width: "280px",
+      },
+      {
+        selector: ".add-new .button",
+        position: "top-end",
+        text: "Clique para inserir o Item na Listagem.",
+        nextText: "Próximo",
+      },
+      {
+        selector: "#buttonTextMode",
+        position: "bottom-end",
+        text: "Clique para ir até o Modo Texto.",
+        nextText: "Próximo",
+      },
+      {
+        selector: "#labelAmount",
+        position: "bottom",
+        text: "Aqui você verá o Valor Total ou o Valor Restante (caso um limite seja definido).",
+        width: "260px",
+      },
+    ]}
+    on:onConfirm={() => listingTour.set(false)}
+  />
+{/if}
 
 <style>
   .screen .header {
     display: flex;
     justify-content: space-between;
-    padding: .75rem;
+    padding: 0.75rem;
     align-items: center;
   }
 
@@ -449,7 +465,7 @@
 
   .button-rounded {
     color: white;
-    border-radius: .5rem;
+    border-radius: 0.5rem;
 
     display: flex;
     justify-content: center;
@@ -461,16 +477,16 @@
   .color-gray {
     color: #4a4a4a;
   }
-  
+
   .button-rounded i {
-    margin-top: .1rem;
-    margin-left: .075rem;
+    margin-top: 0.1rem;
+    margin-left: 0.075rem;
     transform: scale(1.4);
   }
 
   .button-return i {
-    margin-top: -.25rem;
-    margin-left: .5rem;
+    margin-top: -0.25rem;
+    margin-left: 0.5rem;
     transform: scale(1.4);
   }
 </style>

@@ -1,11 +1,19 @@
 <script>
     import { onMount } from "svelte";
     import { fade } from "svelte/transition";
-    import { lists, listingIndex, textMode } from "../Store/globals";
+
+    import { lists, listingIndex, textMode, textModeTour } from "../Store/globals";
+
+    import stepsGuideline from "./guideline.json"
+    import Guideline from "../Components/Guideline.svelte";
+
+    import stepsInto from "./into.json";
+    import Intro from "../Components/Intro.svelte";
+
     export let items;
 
     let textArea;
-
+    
     const getTextByItems = () => {
         let output = "";
 
@@ -42,7 +50,7 @@
             let Object = {};
             let activated = false;
 
-            if (item != "" && item != undefined) activated = true;
+            if (item.match("^[A-Za-z]{1,20}, [A-Za-z]{1,20}, [A-Za-z]{1,20}")) activated = true;
 
             if (item.toLocaleLowerCase().includes("limite:")) {
                 const limitIndex = item.indexOf(":");
@@ -127,13 +135,34 @@
     })
 </script>
 
-<main in:fade out:fade>
+<main in:fade>
     <div class="save">
-        <button class="button is-info" on:click={updateLists}>
+        <button id="buttonSaveTextMode" class="button is-info" on:click={updateLists}>
             Atualizar Listagem
         </button>
     </div>
-    <textarea bind:this={textArea} bind:value />
+    <textarea  bind:this={textArea} bind:value />
+
+    {#if $textModeTour === "guideline"}
+        <Guideline list={stepsGuideline} on:onConfirm={() => textModeTour.set("into")} />
+    {/if}
+
+    {#if $textModeTour === "into"}
+        <Intro
+            title={stepsInto.title}
+            list={stepsInto.list}
+            useHTML={true}
+            canClose={false}
+            showSteps={true}
+            opts={{
+                style: {
+                    width: "92vw",
+                    height: "65vh"
+                } 
+            }}
+            on:onConfirm={() => textModeTour.set(false)}
+        /> 
+    {/if}
 </main>
 
 <style>

@@ -1,0 +1,13 @@
+[
+    {
+      "selector": "#buttonTextMode",
+      "position": "bottom-end",
+      "text": "Clique para ir até o Modo Listagem",
+      "nextText": "Próximo"
+    },
+    {
+      "selector": "#buttonSaveTextMode",
+      "position": "top",
+      "text": "Clique para Salvar Alterações"
+    }
+  ]

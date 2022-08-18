@@ -1,0 +1,17 @@
+{
+    "title": "Instruções",
+    "list": [
+        {
+            "text": "O Modo Texto oferece a possibilidade de você escrever uma lista seguindo um padrão pré-definido que será transformado em uma listagem funcional no Modo Listagem.\n\nExemplos:\n\n<b>1x Macarrão Instantâneo = 1.99</b>\n\nVocê poderia omitir a quantiade \"1x\" se o valor for igual a 1, como por exemplo:\n\n<b>Macarrão Instantâneo = 1.99</b>\n\nIrá gerar o mesmo resultado."
+        },
+        {
+            "text": "O valor também poderia ser omitido, caso seja igual a 0, quando um valor não é especificado, ao \"Atualizar Listagem\" o item correspondente não estará escolhido (em azul).\n<b style='display: flex; justify-content: center; margin-top: 5px;'>2x Desinfetante</b>\n<img style='width: 100%; margin-top: -15px;' src='https://i.imgur.com/yzPKjdw.png' />\n\n<b style='display: flex; justify-content: center;'>2x Desinfetante = 0</b>\n<img style='width: 100%; margin-top: -15px;' src='https://i.imgur.com/ZppbLmB.png' />\n\nE você pode omitir <i><b>Quantidade</b></i> e <i><b>Valor</b></i> juntos, experimente."
+        },
+        {
+            "text": "Em casos de grande quantidade de produtos (acima de 12 unidades), você pode usar o <i><b>Valor</b></i> inteiro, tente:\n\n<b>12x Latas 660ml == 45</b>\n\nO que irá resultar em 12 unidades de R$3,75 no Modo Listagem.\n\nAlém de poder definir o limite da listagem com:\n\n<b>Limit: 500</b>\n\nO que seria equivalente a R$500,00 de limite na listagem atual."
+        },
+        {
+            "text": "<b>1</b> - Não use R$ ou similares no valor, após \"=\", caso o valor seja específicado.\n\n<b>2</b> - Siga o padrão pré-definido para evitar que itens sejam perdidos.\n<b>2.1</b> - <b>{Quantidade}x {Item} = {Valor}</b>\n<b>2.2</b> - <b>{Item} = {Valor}</b>\n<b>2.3</b> - <b>{Quantidade}x {Item}</b>\n\n<b>3</b> - Sempre confira os itens que sofreram alterações no Modo Texto antes de Atualizar Listagem.\n\n<b>4</b> - Use e abuse de números decimais (use vírgula ou ponto).\n<b>4.1</b> - <b>0.6x Queijo Mussarela = 22.9</b>\n<b>4.2</b> - <b>.58x Litcoin = 315,62</b>"
+        }
+      ]
+}

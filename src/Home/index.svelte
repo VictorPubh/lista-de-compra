@@ -2,6 +2,8 @@
   import { fade, fly } from "svelte/transition";
   import autoAnimate from "@formkit/auto-animate";
   import { listingIndex, lists } from "../Store/globals";
+  
+  import Guideline from "../Components/Guideline.svelte";
 
   let nameInput, limitInput;
 
