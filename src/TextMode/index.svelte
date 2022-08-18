@@ -77,6 +77,7 @@
                 const totalCandidate = +(itemInfo[1].replace(",", "."));
 
                 if (!isNaN(totalCandidate)) {
+                    Object.purchased = true;
                     Object.value = totalCandidate / Object.quantity;
                     item = itemInfo[0]
                 }
