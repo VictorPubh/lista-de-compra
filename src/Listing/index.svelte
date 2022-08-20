@@ -1,6 +1,7 @@
 <script>
   import autoAnimate from "@formkit/auto-animate";
   import TextMode from "../TextMode/index.svelte";
+  import { fade } from "svelte/transition";
 
   import {
     lists,
@@ -10,12 +11,18 @@
     listingItemTour,
   } from "../Store/globals";
 
-  let firstItemAdd = false;
-
+  import listingGuideline from "./guideline.json";
   import Guideline from "../Components/Guideline.svelte";
 
+  import { openModal, optsModal } from "../Store/modal";
+
+  import { isTrue } from "../Utils/isTrue";
+  import WrittenModeServices from "../TextMode/services";
+
+  let firstItemAdd = false;
+
   export let listName = "Lista de Compra";
-  export let listData = [];
+  export let listData = $lists[$listingIndex];
   export let listLimit = 0;
 
   let currentQuantity;
@@ -139,22 +146,66 @@
   };
 
   function setPurchased(id, bool) {
-    listData[id].purchased = bool;
+    const _lists = $lists[$listingIndex].content;
+    _lists[id].purchased = bool;
 
-    updateStore(listData);
+    updateStore(_lists);
+  }
+
+  const modeTextManager = () => {
+    const _list = $lists[$listingIndex];
+    const WMServices = new WrittenModeServices(_list);
+
+    if ($textMode) {
+      if (JSON.stringify(_list.content) != JSON.stringify(WMServices.getObject())) {
+        optsModal.set({
+            title: "Sair sem Salvar?",
+            message: "Você não salvou as alteraçõe<br />no Modo Texto.",
+            textBack: "Voltar",
+            textConfirm: "Salvar",
+            textCancel: "Descartar",
+            fn: {
+              confirm: () => {
+                $lists[$listingIndex].content = WMServices.getObject();
+                lists.set($lists);
+
+                openModal.set(false);
+                textMode.set(false);
+              },
+              cancel: () => {
+                openModal.set(false);
+                textMode.set(false);
+              },
+              back: () => {
+                openModal.set(false);
+              },
+              overlay: () => {}
+            }
+        })
+      } else {
+        textMode.set(false);
+      }
+    } else {
+      textMode.set(true);
+    }
+
   }
 </script>
 
 <main class="screen">
   <div class="header py-4">
     <div class="button-return">
-      <i
+      {#if !$textMode}
+      <i 
         class="gg-arrow-left"
         on:click={() => {
           listingIndex.set(undefined);
           textMode.set(false);
         }}
       />
+      {:else}
+      <i class="gg-arrow-left has-text-white" />
+      {/if}
     </div>
     <span>
       {#if filterData(listData).length > 0}
@@ -167,7 +218,7 @@
     </span>
     <div
       id="buttonTextMode"
-      on:click={() => textMode.set(!$textMode)}
+      on:click={modeTextManager}
       class={`button-rounded ${
         $textMode === true ? "has-background-info" : "color-gray"
       }`}
@@ -316,62 +367,52 @@
       </div>
     </div>
   {:else}
-    <TextMode items={$lists[$listingIndex]} />
+    <TextMode />
   {/if}
 </main>
 
-{#if $listingTour == true || $listingTour == "true"}
+{#if isTrue($listingTour)}
   <Guideline
-    list={[
-      {
-        selector: ".add-new",
-        position: "top",
-        text: "<p style='text-align: center;'><b>Insira itens a sua listagem.</b>\n\n<u>Quantidade</u> é Opcional (Padrão: 1)\n<u>Nome</u> é Opcional (Padrão: Produto #123)\n<u>Valor</u> é Opcional (Padrão: 0).</p>",
-      }
-    ]}
-    useHTML={true}
+    {...listingGuideline.addItem}
     on:onConfirm={() => listingTour.set(false)}
   />
 {/if}
 
-{#if firstItemAdd == true && ($listingItemTour == true || $listingItemTour == "true")}
+{#if firstItemAdd && isTrue($listingItemTour)}
   <Guideline
-    list={[
-      {
-        selector: ".input-quantity",
-        position: "bottom-start",
-        text: "Para remover um item, altere\na <u>Quantidade</u> para 0.",
-      },
-    ]}
-    useHTML={true}
+    {...listingGuideline.removeItem}
     on:onConfirm={() => listingItemTour.set(false)}
   />
 {/if}
 
-<style>
-  .screen .header {
-    display: flex;
-    justify-content: space-between;
-    padding: 0.75rem;
-    align-items: center;
+<style lang="scss">
+  .screen {
+    .header {
+      display: flex;
+      justify-content: space-between;
+      padding: 0.75rem;
+      align-items: center;
+    }
   }
 
   .add-new {
     display: grid;
     grid-template-columns: 2.75rem auto 4.5rem min-content;
     gap: 0.5rem;
-
     width: 100vw;
     padding: 0.5rem;
-
     position: fixed;
     bottom: 0;
-  }
 
-  .add-new input,
-  .add-new button {
-    border-radius: 0.75rem;
-    padding: 1.5rem 1rem;
+    input {
+      border-radius: 0.75rem;
+      padding: 1.5rem 1rem;
+    }
+
+    button {
+      border-radius: 0.75rem;
+      padding: 1.5rem 1rem;
+    }
   }
 
   .text-title {
@@ -393,14 +434,18 @@
     border-radius: 0.5rem;
   }
 
-  li.list-item input {
-    color: #4a4a4a;
-    border-bottom: 0.15rem solid #3e8ed0;
+  li.list-item {
+    input {
+      color: #4a4a4a;
+      border-bottom: 0.15rem solid #3e8ed0;
+    }
   }
 
-  li.is-info input {
-    color: white;
-    border-bottom: 0.15rem solid white;
+  li.is-info {
+    input {
+      color: white;
+      border-bottom: 0.15rem solid white;
+    }
   }
 
   .money-grid {
@@ -412,7 +457,17 @@
     text-align: center;
   }
 
-  .input-quantity,
+  .input-quantity {
+    width: 4rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    background-color: transparent;
+    border: 0;
+    color: white;
+    text-align: center;
+    outline: none;
+  }
+
   .input-value {
     width: 4rem;
     font-size: 0.75rem;
@@ -433,27 +488,28 @@
   .button-rounded {
     color: white;
     border-radius: 0.5rem;
-
     display: flex;
     justify-content: center;
     align-items: center;
     width: 2.5rem;
     height: 2.5rem;
+
+    i {
+      margin-top: 0.1rem;
+      margin-left: 0.075rem;
+      transform: scale(1.4);
+    }
   }
 
   .color-gray {
     color: #4a4a4a;
   }
 
-  .button-rounded i {
-    margin-top: 0.1rem;
-    margin-left: 0.075rem;
-    transform: scale(1.4);
-  }
-
-  .button-return i {
-    margin-top: -0.25rem;
-    margin-left: 0.5rem;
-    transform: scale(1.4);
+  .button-return {
+    i {
+      margin-top: -0.25rem;
+      margin-left: 0.5rem;
+      transform: scale(1.4);
+    }
   }
 </style>

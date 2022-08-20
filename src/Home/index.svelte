@@ -2,8 +2,6 @@
   import { fade, fly } from "svelte/transition";
   import autoAnimate from "@formkit/auto-animate";
   import { listingIndex, lists } from "../Store/globals";
-  
-  import Guideline from "../Components/Guideline.svelte";
 
   let nameInput, limitInput;
 
@@ -147,18 +145,16 @@
   </div>
 </main>
 
-<style>
+<style lang="scss">
   .screen {
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
     gap: 0.5rem;
-
     width: 100vw;
     height: 100%;
     min-height: 100vh;
-
     padding: 0.75rem;
   }
 
@@ -169,29 +165,32 @@
     padding: 0.75rem;
     width: 100%;
     border-radius: 0.5rem;
-  }
 
-  .list-item .trash {
-    padding: 0.5rem 0.75rem;
+    .trash {
+      padding: 0.5rem 0.75rem;
+    }
   }
 
   .new-list {
     position: fixed;
     bottom: 0;
-
     display: grid;
     grid-template-columns: auto 5rem min-content;
     gap: 0.5rem;
-
     width: 100vw;
     padding: 0.5rem;
-  }
 
-  .new-list input,
-  .new-list .button {
-    border: 0;
-    border-radius: 0.75rem;
-    padding: 1.5rem 1rem;
+    input {
+      border: 0;
+      border-radius: 0.75rem;
+      padding: 1.5rem 1rem;
+    }
+
+    .button {
+      border: 0;
+      border-radius: 0.75rem;
+      padding: 1.5rem 1rem;
+    }
   }
 
   .is-pickall {
@@ -220,15 +219,15 @@
     width: 100%;
     display: grid;
     gap: 0.75rem;
-  }
 
-  ul.item-lists li {
-    height: 3.75rem;
-  }
+    li {
+      height: 3.75rem;
+    }
 
-  ul.item-lists .item-title {
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    overflow: hidden;
+    .item-title {
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      overflow: hidden;
+    }
   }
 </style>

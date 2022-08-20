@@ -12,16 +12,25 @@
     export let list = [];
     export let opts = {};
 
-    window.webAssistant.guideline({
-      list,
-      canClose,
-      showSteps,
-      prevText,
-      confirmText,
-      ...opts,
-      dangerouslyUseHTMLString: useHTML,
-      onConfirm: () => dispatch("onConfirm"),
-    });
+   const dipatchGuideline = async () => {
+      try {
+        await window.webAssistant.guideline({
+          list,
+          canClose,
+          showSteps,
+          prevText,
+          confirmText,
+          ...opts,
+          dangerouslyUseHTMLString: useHTML,
+          onConfirm: () => dispatch("onConfirm"),
+        });
+      } catch(err) {
+        console.error(err);
+      }
+    }
+
+    const hasWebAssistant = window.webAssistant != undefined;
+    hasWebAssistant && dipatchGuideline();
   </script>
   
   <main />

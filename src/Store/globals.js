@@ -1,3 +1,4 @@
+import { getStorageOr } from '../Utils/getStorageOr';
 import { writable } from 'svelte/store';
 
 // If the value is don't undefined, a Listing has focus
@@ -8,37 +9,27 @@ const listsStorageArray = JSON.parse(listsStorage || "{}");
 const hasListsStorage = Array.isArray(listsStorageArray);
 
 export const lists = writable(hasListsStorage ? listsStorageArray : []);
-
 lists.subscribe(value => localStorage.lists = JSON.stringify(value));
 
-// Text Mode
-const textModeStorage = localStorage.textMode;
-const hasTextModeStorage = typeof textModeStorage !== "undefined";
-
-export const textMode = writable(hasTextModeStorage ? textModeStorage : false);
-
-// textMode.subscribe(value => localStorage.textMode = value);
-
+// Text Mode (Boolean)
+const textModeStorage = getStorageOr("textMode", false);
+export const textMode = writable(textModeStorage);
 
 // Tour: Into & Guideline
-
-// Text Mode Tour
-const textModeTourStorage = localStorage.textModeTour;
-const hasTextModeTour = typeof textModeTourStorage !== "undefined";
-
-export const textModeTour = writable(hasTextModeTour ? textModeTourStorage : "guideline");
-textModeTour.subscribe(value => localStorage.textModeTour = value);
+const tourGuideline = {
+    listing:     getStorageOr("listingTour", true),
+    listingItem: getStorageOr("listingItemTour", true),
+    textMode:    getStorageOr("textModeTour", "guideline")
+}
 
 // Listing Tour
-const listingTourStorage = localStorage.listingTour;
-const hasListingTour = typeof listingTourStorage !== "undefined";
-
-export const listingTour = writable(hasListingTour ? listingTourStorage : true);
+export const listingTour = writable(tourGuideline.listing);
 listingTour.subscribe(value => localStorage.listingTour = value);
 
 // Listing Item Tour
-const listingItemTourStorage = localStorage.listingItemTour;
-const hasListingItemTour = typeof listingItemTourStorage !== "undefined";
-
-export const listingItemTour = writable(hasListingItemTour ? listingItemTourStorage : true);
+export const listingItemTour = writable(tourGuideline.listingItem);
 listingItemTour.subscribe(value => localStorage.listingItemTour = value);
+
+// Text Mode Tour
+export const textModeTour = writable(tourGuideline.textMode);
+textModeTour.subscribe(value => localStorage.textModeTour = value);

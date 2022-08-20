@@ -1,0 +1,46 @@
+/* Write your global styles here, in SCSS syntax. Variables and mixins from the src/variables.scss file are available here without importing */ /* Import only what you need from Bulma */
+
+@import "bulma/sass/utilities/_all";
+
+@import "bulma/sass/base/_all";
+
+@import "bulma/sass/elements/_all";
+
+@import "bulma/sass/form/_all";
+
+@import "bulma/sass/components/_all";
+
+@import "bulma/sass/grid/_all";
+
+@import "bulma/sass/helpers/_all";
+
+@import "bulma/sass/layout/_all";
+
+@import "./gg.css";
+
+.gridListItems {
+  display: grid;
+  gap: 0.5rem;
+  overflow: hidden;
+  margin: 0.5rem;
+}
+
+.total-selected {
+  font-weight: bold;
+  font-size: 1.2rem;
+  display: flex;
+  justify-content: space-between;
+  margin: 0 1rem;
+}
+
+.tabs li.is-active a {
+  color: #3e8ed0 !important;
+  border-bottom-color: #3e8ed0 !important;
+}
+
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+}

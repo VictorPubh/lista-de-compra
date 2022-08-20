@@ -1,0 +1,10 @@
+{
+    "addList": {
+        "useHTML": true,
+        "list": [{
+            "selector": ".new-list",
+            "position": "top",
+            "text": "<p style='text-align: center;'><b>Crie sua Lista.</b>\n\n<u>Nome</u> é Opcional (Padrão: Lista #123)\n<u>Limite</u> é Opcional (Padrão: N/A)"
+        }]
+    }
+}

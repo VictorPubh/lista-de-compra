@@ -10,15 +10,19 @@
   },
   "devDependencies": {
     "@sveltejs/vite-plugin-svelte": "^1.0.1",
+    "sass": "^1.53.0",
     "svelte": "^3.49.0",
+    "svelte-preprocess": "^4.10.7",
     "vite": "^3.0.7",
-    "vite-plugin-pwa": "^0.12.3"
+    "vite-plugin-pwa": "^0.12.3",
+    "bulma": "^0.9.4"
   },
   "dependencies": {
     "@formkit/auto-animate": "^1.0.0-beta.1",
     "pouchdb": "^7.3.0",
     "pouchdb-adapter-localstorage": "^7.3.0",
     "pouchdb-browser": "^7.3.0",
+    "u": "^0.1.0",
     "web-assistant": "^1.2.1"
   }
 }
