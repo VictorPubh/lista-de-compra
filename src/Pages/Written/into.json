@@ -1,0 +1,17 @@
+{
+    "title": "Instruções de Uso",
+    "list": [
+        {
+            "text": "O <u>Modo Texto</u> oferece a possibilidade de você escrever uma lista seguindo um padrão pré-definido que será transformado em uma listagem funcional no <u>Modo Listagem</u>.\n\nExemplos:\n\n<b>1x Macarrão Instantâneo = 1.99</b>\n\nVocê poderia omitir a <i><u>Quantidade</u></i> \"1x\" se o valor for igual a 1, como por exemplo:\n\n<b>Macarrão Instantâneo = 1.99</b>\n\nIrá gerar o mesmo resultado."
+        },
+        {
+            "text": "O <u><i>Valor</i></u> também poderia ser omitido, caso seja igual a 0, quando um <u><i>Valor</i></u> não é especificado, ao <i><u>\"Atualizar\"</u></i> o item correspondente não estará <u>Escolhido</u> (em azul).\n\n<b>2x Desinfetante</b>\n\n<b>2x Desinfetante = 0</b>\n\nE você pode omitir <i><u>Quantidade</u></i> e <i><u>Valor</u></i> juntos, experimente.\n\nExemplo: <b>Desinfetante</b> seria equivalente a <b>1x Desinfetante</b>."
+        },
+        {
+            "text": "Em casos de um item possuir grande <i><u>Quantidade</u></i> de produtos (acima de 12 unidades), você pode usar o <i><u>Valor</u></i> inteiro, tente:\n\n<b>12x Latas 660ml == 45</b>\n\nO que irá resultar em 12 unidades de R$3,75 no <i>Modo Listagem</i>.\n\nAlém de poder definir o limite da listagem com:\n\n<b>Limit: 500</b>\n\nO que seria equivalente a R$500,00 de limite na listagem atual."
+        },
+        {
+            "text": "<b>1</b> - Não use R$ ou similares no valor, após \"=\" ou \"==\", caso o <u><i>Valor</i></u> seja específicado.\n\n<b>2</b> - Siga o padrão pré-definido para evitar que itens sejam perdidos.\n<div style=\"font-size: .75rem\"><b>2.1</b> - <b>{Quantidade}x {Item} = {Valor}</b>\n<b>2.2</b> - <b>{Item} = {Valor}</b>\n<b>2.3</b> - <b>{Quantidade}x {Item}</b>\n<b>2.4</b> - <b>{Item}</b></div>\n<b>3</b> - Use e abuse de números decimais (use vírgula ou ponto).\n<div style=\"font-size: .75rem\"><b>3.1</b> - <b>0.6x Queijo Mussarela = 22.9</b>\n<b>3.2</b> - <b>.58x Litcoin = 315,62</b></div>\n<b>4</b> - Use <i>Pontos</i> ou <i>Vírgulas</i> apenas para centavos, nunca para unidades de milhar. (i.e, 10000,00 ou 10000.00)"
+        }
+      ]
+}

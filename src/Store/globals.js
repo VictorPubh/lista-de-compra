@@ -1,5 +1,9 @@
-import { getStorageOr } from '../Utils/getStorageOr';
+import { getStorageOr } from '../Utils/storageOperators';
 import { writable } from 'svelte/store';
+
+// any new value assignment to this variable
+// will reassemble the component.
+export const reassemble = writable({});
 
 // If the value is don't undefined, a Listing has focus
 export const listingIndex = writable(undefined);
@@ -29,6 +33,8 @@ listingTour.subscribe(value => localStorage.listingTour = value);
 // Listing Item Tour
 export const listingItemTour = writable(tourGuideline.listingItem);
 listingItemTour.subscribe(value => localStorage.listingItemTour = value);
+
+export const tourFirstItemAdd = writable(false);
 
 // Text Mode Tour
 export const textModeTour = writable(tourGuideline.textMode);

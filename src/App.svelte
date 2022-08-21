@@ -1,9 +1,9 @@
 <script>
-    import Home from "./Home/index.svelte";
-    import Listing from "./Listing/index.svelte";
     import Modal from "./Components/Modal.svelte";
 
-    import { listingIndex, lists } from "./Store/globals";
+    import { Router } from "svelte-router-spa";
+    import { routes } from "./routes.js";
+
     import { openModal, optsModal } from "./Store/modal";
 </script>
 
@@ -16,13 +16,5 @@
 {/if}
 
 <main>
-    {#if isNaN($listingIndex)}
-        <Home />
-    {:else}
-        <Listing
-            listName={$lists[$listingIndex].name}
-            listData={$lists[$listingIndex].content}
-            listLimit={$lists[$listingIndex].limit}
-        />
-    {/if}
+    <Router {routes} />
 </main>
