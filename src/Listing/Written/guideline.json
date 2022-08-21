@@ -1,6 +1,6 @@
 [
     {
-      "selector": "#buttonSaveTextMode",
+      "selector": "#buttonSaveWrittenMode",
       "position": "top",
       "text": "Clique para Salvar Alterações"
     }

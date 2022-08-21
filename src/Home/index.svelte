@@ -15,7 +15,7 @@
       id,
       name,
       content: [],
-      limit,
+      limit
     });
 
     // Reset Inputs

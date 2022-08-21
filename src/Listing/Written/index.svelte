@@ -2,24 +2,24 @@
   import { onMount } from "svelte";
   import { fade } from "svelte/transition";
 
-  import { textModeTour, lists, listingIndex } from "../Store/globals";
+  import { writtenModeTour, lists, listingIndex } from "../../Store/globals";
 
   import stepsGuideline from "./guideline.json";
   import stepsInto from "./into.json";
 
-  import Guideline from "../Components/Guideline.svelte";
-  import Intro from "../Components/Intro.svelte";
+  import Guideline from "../../Components/Guideline.svelte";
+  import Intro from "../../Components/Intro.svelte";
 
-  import { textAreaValue } from "../Store/text-mode";
+  import { textAreaValue } from "../../Store/written-mode";
   import WrittenModeServices from "./services";
 
   let textArea;
-  const WMService = new WrittenModeServices($lists[$listingIndex]);
+  const writtenServices = new WrittenModeServices($lists[$listingIndex]);
 
   onMount(() => {
-    textAreaValue.set(WMService.getText());
+    textAreaValue.set(writtenServices.getText());
 
-    if (!$textModeTour) {
+    if (!$writtenModeTour) {
       textArea.focus();
     }
   });
@@ -28,29 +28,29 @@
 <main in:fade>
   <div class="actions">
     <button
-      id="buttonSaveTextMode"
+      id="buttonSaveWrittenMode"
       class="button is-info"
-      on:click={() => WMService.save()}
+      on:click={() => writtenServices.save()}
     >
       Atualizar
     </button>
     <button
       class="button float-help is-info is-light"
       on:click={() => {
-        textModeTour.set("into");
+        writtenModeTour.set("into");
       }}>?</button
     >
   </div>
   <textarea bind:this={textArea} bind:value={$textAreaValue} />
 
-  {#if $textModeTour === "guideline"}
+  {#if $writtenModeTour === "guideline"}
     <Guideline
       list={stepsGuideline}
-      on:onConfirm={() => textModeTour.set("into")}
+      on:onConfirm={() => writtenModeTour.set("into")}
     />
   {/if}
 
-  {#if $textModeTour === "into"}
+  {#if $writtenModeTour === "into"}
     <Intro
       title={stepsInto.title}
       list={stepsInto.list}
@@ -64,7 +64,7 @@
         },
       }}
       on:onConfirm={() => {
-        textModeTour.set(false);
+        writtenModeTour.set(false);
         textArea.focus();
       }}
     />
@@ -87,7 +87,7 @@
   .actions {
     position: fixed;
     bottom: 0;
-    z-index: 999;
+    z-index: 100;
 
     display: flex;
     justify-content: center;

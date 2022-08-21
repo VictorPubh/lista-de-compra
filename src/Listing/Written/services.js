@@ -1,5 +1,5 @@
-import { listingIndex, lists, textMode } from "../Store/globals";
-import { textAreaValue, quantityIdentical } from "../Store/text-mode";
+import { listingIndex, lists } from "../../Store/globals";
+import { textAreaValue, quantityIdentical } from "../../Store/written-mode";
 import { get } from "svelte/store";
 
 class WrittenModeServices {
@@ -12,17 +12,18 @@ class WrittenModeServices {
   getText() {
     let output = String();
 
-    if (this.list.limit > 0) output += `Limite: ${this.list.limit}\r\n\r\n`;
+    if (this.list.limit > 0) output += `Limite: ${this.list.limit}\r\n`;
+    output += (this.list.discount > 0) ? `Desconto: ${this.list.discount}\r\n\r\n` : `\r\n`;
 
     this.list.content.forEach((item) => {
-      let endString = `= ${item.value}\r\n`;
+      let endString = "\r\n";
 
       if (item.quantity >= get(quantityIdentical)) {
         endString = `== ${item.value * item.quantity}\r\n`;
       }
 
-      if (item.value <= 0) {
-        endString = "\r\n";
+      if (item.value > 0 || item.purchased) {
+        endString = `= ${item.value || 0}\r\n`;
       }
 
       output += `${item.quantity}x ${item.name} ${endString}`;
@@ -57,7 +58,7 @@ class WrittenModeServices {
           this.list.limit = limitCandidate;
 
           const _lists = get(lists);
-          lists[get(listingIndex)].limit = limitCandidate;
+          _lists[get(listingIndex)].limit = limitCandidate;
           lists.set(_lists);
 
           validLine = false;
@@ -129,8 +130,6 @@ save() {
     const _lists = get(lists)
     _lists[get(listingIndex)].content = parsed;
     lists.set(_lists);
-    
-    // textMode.set(false);
   }
 }
 

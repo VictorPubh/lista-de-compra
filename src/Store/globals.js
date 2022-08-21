@@ -12,14 +12,14 @@ export const lists = writable(hasListsStorage ? listsStorageArray : []);
 lists.subscribe(value => localStorage.lists = JSON.stringify(value));
 
 // Text Mode (Boolean)
-const textModeStorage = getStorageOr("textMode", false);
-export const textMode = writable(textModeStorage);
+const writtenModeStorage = getStorageOr("writtenMode", false);
+export const writtenMode = writable(writtenModeStorage);
 
 // Tour: Into & Guideline
 const tourGuideline = {
     listing:     getStorageOr("listingTour", true),
     listingItem: getStorageOr("listingItemTour", true),
-    textMode:    getStorageOr("textModeTour", "guideline")
+    writtenMode:    getStorageOr("writtenModeTour", "guideline")
 }
 
 // Listing Tour
@@ -31,5 +31,5 @@ export const listingItemTour = writable(tourGuideline.listingItem);
 listingItemTour.subscribe(value => localStorage.listingItemTour = value);
 
 // Text Mode Tour
-export const textModeTour = writable(tourGuideline.textMode);
-textModeTour.subscribe(value => localStorage.textModeTour = value);
+export const writtenModeTour = writable(tourGuideline.writtenMode);
+writtenModeTour.subscribe(value => localStorage.writtenModeTour = value);

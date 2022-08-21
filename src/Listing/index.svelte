@@ -1,15 +1,18 @@
 <script>
   import autoAnimate from "@formkit/auto-animate";
-  import TextMode from "../TextMode/index.svelte";
-  import { fade } from "svelte/transition";
 
+  import WrittenMode from "./Written/index.svelte";
+  import WrittenModeServices from "./Written/services";
+  
   import {
     lists,
     listingIndex,
-    textMode,
+    writtenMode,
     listingTour,
     listingItemTour,
   } from "../Store/globals";
+
+  import { textAreaValue } from "../Store/written-mode";
 
   import listingGuideline from "./guideline.json";
   import Guideline from "../Components/Guideline.svelte";
@@ -17,7 +20,6 @@
   import { openModal, optsModal } from "../Store/modal";
 
   import { isTrue } from "../Utils/isTrue";
-  import WrittenModeServices from "../TextMode/services";
 
   let firstItemAdd = false;
 
@@ -83,9 +85,10 @@
   };
 
   function removeProductZero() {
-    let newListing = listData.filter((item) => item.quantity > 0);
+    let _list = listData.filter((item) => item.quantity > 0);
+    _list.map((item, i) => item.id = i);
 
-    updateStore(newListing);
+    updateStore(_list);
   }
 
   function addItem() {
@@ -122,8 +125,8 @@
     })}`;
   };
 
-  $: getAvailableValue = (formated = true) => {
-    const totalAvailable = listLimit - +getTotalSelected(false);
+  $: getAvailable = (formated = true) => {
+    const totalAvailable = listLimit - +getPicked(false);
     return formated
       ? `R$ ${totalAvailable.toLocaleString("pt-br", {
           minimumFractionDigits: 2,
@@ -131,7 +134,7 @@
       : totalAvailable;
   };
 
-  $: getTotalSelected = function (formated = true) {
+  $: getPicked = function (formated = true) {
     let amount = 0;
 
     listData.forEach((item) => {
@@ -152,12 +155,12 @@
     updateStore(_lists);
   }
 
-  const modeTextManager = () => {
+  const writtenManager = () => {
     const _list = $lists[$listingIndex];
     const WMServices = new WrittenModeServices(_list);
 
-    if ($textMode) {
-      if (JSON.stringify(_list.content) != JSON.stringify(WMServices.getObject())) {
+    if ($writtenMode) {
+      if ($textAreaValue != WMServices.getText()) {
         optsModal.set({
             title: "Sair sem Salvar?",
             message: "Você não salvou as alteraçõe<br />no Modo Texto.",
@@ -170,11 +173,11 @@
                 lists.set($lists);
 
                 openModal.set(false);
-                textMode.set(false);
+                writtenMode.set(false);
               },
               cancel: () => {
                 openModal.set(false);
-                textMode.set(false);
+                writtenMode.set(false);
               },
               back: () => {
                 openModal.set(false);
@@ -183,10 +186,10 @@
             }
         })
       } else {
-        textMode.set(false);
+        writtenMode.set(false);
       }
     } else {
-      textMode.set(true);
+      writtenMode.set(true);
     }
 
   }
@@ -195,12 +198,12 @@
 <main class="screen">
   <div class="header py-4">
     <div class="button-return">
-      {#if !$textMode}
+      {#if !$writtenMode}
       <i 
         class="gg-arrow-left"
         on:click={() => {
           listingIndex.set(undefined);
-          textMode.set(false);
+          writtenMode.set(false);
         }}
       />
       {:else}
@@ -213,26 +216,27 @@
         >
       {/if}
       <span id="labelAmount" class="tag is-medium">
-        {hasLimit ? getAvailableValue() : getTotalSelected()}
+        {hasLimit ? getAvailable() : getPicked()}
       </span>
     </span>
     <div
-      id="buttonTextMode"
-      on:click={modeTextManager}
+      id="buttonWrittenMode"
+      on:click={writtenManager}
       class={`button-rounded ${
-        $textMode === true ? "has-background-info" : "color-gray"
+        $writtenMode === true ? "has-background-info" : "color-gray"
       }`}
     >
       <i class="gg-format-text" />
     </div>
   </div>
 
-  {#if $textMode === false}
+  {#if $writtenMode === false}
     <div class="tabs is-centered mb-1">
       <ul>
         {#each tabs as tab}
           <li class={tab.active && "is-active"}>
-            <a href={`#${tab.label}`} on:click={() => setTab(tab.label)}>
+            <!-- svelte-ignore a11y-missing-attribute -->
+            <a on:click={() => setTab(tab.label)}>
               <span>{tab.label}</span>
             </a>
           </li>
@@ -307,12 +311,12 @@
             </div>
           {/if}
 
-          {#if getTotalSelected() != "R$ 0,00" && !tabs[2].active}
+          {#if getPicked() != "R$ 0,00" && !tabs[2].active}
             <div class="total-selected">
               <span class="has-text-grey is-size-6">Total:</span>
               <span>
                 {hasLimit ? "-" : ""}
-                {getTotalSelected()}
+                {getPicked()}
               </span>
             </div>
           {/if}
@@ -322,15 +326,15 @@
               <span />
               <span
                 class={`is-size-5 ${
-                  getAvailableValue(false) < 0 && "has-text-danger"
-                }`}>{getAvailableValue()}</span
+                  getAvailable(false) < 0 && "has-text-danger"
+                }`}>{getAvailable()}</span
               >
             </div>
           {/if}
         </div>
         <div class="m-5 pt-2" />
       {:else if !tabs[3].active}
-        <h1 class="has-text-centered my-6">Nenhum Item.</h1>
+        <h1 class="has-text-centered my-6">Nenhum Item Disponível.</h1>
       {/if}
 
       <div class="add-new">
@@ -367,7 +371,7 @@
       </div>
     </div>
   {:else}
-    <TextMode />
+    <WrittenMode />
   {/if}
 </main>
 
@@ -439,12 +443,18 @@
       color: #4a4a4a;
       border-bottom: 0.15rem solid #3e8ed0;
     }
+    input::placeholder {
+      color: #4a4a4a;
+    }
   }
 
   li.is-info {
     input {
       color: white;
       border-bottom: 0.15rem solid white;
+    }
+    input::placeholder {
+      color: white;
     }
   }
 
