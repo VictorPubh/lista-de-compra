@@ -10,18 +10,21 @@
   },
   "devDependencies": {
     "@sveltejs/vite-plugin-svelte": "^1.0.1",
+    "bulma": "^0.9.4",
     "sass": "^1.53.0",
     "svelte": "^3.49.0",
     "svelte-preprocess": "^4.10.7",
     "vite": "^3.0.7",
-    "vite-plugin-pwa": "^0.12.3",
-    "bulma": "^0.9.4"
+    "vite-plugin-pwa": "^0.12.3"
   },
   "dependencies": {
     "@formkit/auto-animate": "^1.0.0-beta.1",
+    "@fortawesome/free-brands-svg-icons": "^6.1.2",
+    "@fortawesome/free-solid-svg-icons": "^6.1.2",
     "pouchdb": "^7.3.0",
     "pouchdb-adapter-localstorage": "^7.3.0",
     "pouchdb-browser": "^7.3.0",
+    "svelte-fa": "^3.0.3",
     "u": "^0.1.0",
     "web-assistant": "^1.2.1"
   }

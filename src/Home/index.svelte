@@ -59,9 +59,9 @@
 </script>
 
 <main
-  class="has-background-info"
-  in:fly={{ x: -500, duration: 340 }}
-  out:fly={{ x: -500, duration: 340 }}
+class="has-background-info"
+in:fly={{ x: -500, duration: 340 }}
+out:fly={{ x: -500, duration: 340 }}
 >
   <div class="screen">
     {#if $lists.length > 0}

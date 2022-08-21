@@ -13,7 +13,7 @@ class WrittenModeServices {
     let output = String();
 
     if (this.list.limit > 0) output += `Limite: ${this.list.limit}\r\n`;
-    output += (this.list.discount > 0) ? `Desconto: ${this.list.discount}\r\n\r\n` : `\r\n`;
+    // output += (this.list.discount > 0) ? `Desconto: ${this.list.discount}\r\n\r\n` : `\r\n`;
 
     this.list.content.forEach((item) => {
       let endString = "\r\n";
@@ -23,7 +23,7 @@ class WrittenModeServices {
       }
 
       if (item.value > 0 || item.purchased) {
-        endString = `= ${item.value || 0}\r\n`;
+        endString = `= ${(item.value).toFixed(2) || 0}\r\n`;
       }
 
       output += `${item.quantity}x ${item.name} ${endString}`;
@@ -130,6 +130,8 @@ save() {
     const _lists = get(lists)
     _lists[get(listingIndex)].content = parsed;
     lists.set(_lists);
+
+    textAreaValue.set(this.getText());
   }
 }
 
